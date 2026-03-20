@@ -35,12 +35,23 @@
 *.i*86
 *.x86_64
 *.hex
+ctaskmanager
+
+# CLion IDE
+.idea/
+cmake-build-*/
+*.iml
 
 # Debug files
 *.dSYM/
 *.su
 *.idb
 *.pdb
+*.dwo
+
+# OS generated
+.DS_Store
+Thumbs.db
 
 # Kernel Module Compile Results
 *.mod*
@@ -50,6 +61,3 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
-
-# debug information files
-*.dwo
