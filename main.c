@@ -1,6 +1,7 @@
 #include <stdio.h>
+#include "gantt.h"
 
 int main() {
-    printf("Hello World\n");
+    print_testExample();
     return 0;
 }
