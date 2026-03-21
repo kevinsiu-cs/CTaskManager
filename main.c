@@ -15,7 +15,7 @@ int main(void) {
     while (1) {
         printf("Would you like to see an example of a Gantt Chart? (Yes or No)\n");
 
-        if (fgets(userInput,sizeof(userInput),stdin) == NULL) {
+        if (fgets(userInput,MAXARRAY,stdin) == NULL) {
             return -1;
         }
         removeNewline(userInput);
@@ -30,11 +30,14 @@ int main(void) {
         printf("Invalid Input!\n");
         }
 
-    int taskNum = getTaskNum();
-    Tasks UserTasks[taskNum];
+    int taskNum = getNumOfTasks();
+    Tasks userTaskArray[taskNum];
     //printf("%d\n", taskNum);
 
-    //getTaskInfo(UserTasks,taskNum);
+    getTaskInfo(userTaskArray,taskNum);
+
+    printTask(userTaskArray);
+
 
     return 0;
 }

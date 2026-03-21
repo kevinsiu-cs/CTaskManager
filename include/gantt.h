@@ -4,14 +4,14 @@
 #include <string.h>
 #include <stdbool.h>
 
-#define MAXSIZE 100
+#define MAXARRAY 256
 #define MAXTASKS 10
 
 
 
 typedef struct {
     int taskID;
-    char taskName[MAXSIZE];
+    char taskName[MAXARRAY];
     int ownerID;
     int startMonth;
     int endMonth;
@@ -27,6 +27,8 @@ void print_Header(void);
 void print_spacedLine(void);
 void print_testExample(void);
 
-int getTaskNum(void);
+int getNumOfTasks(void);
 void getTaskInfo(Tasks userTasks[], int taskNum);
+
+void printTask(const Tasks *task);
 
