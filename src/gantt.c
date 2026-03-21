@@ -24,16 +24,16 @@ void print_testExample(void) {
     print_spacedLine();
 
     Tasks exampleTask[] = {
-        {"Find_Bank",1, 1,2, 0, {}},
-        {"Get_Mortgage_approval",2, 2, 2, 1, {0}},
-        {"Draw_down",3,4,6,2,{0,1}},
-        {"Build_Foundation",3,3,4, 1,{2}},
-        {"Build_walls", 4, 5, 0,0, {}},
-        {"Roof_and_Ceiling", 1,5, 6, 2, {3, 4}},
-        {"Plumbing", 5,7, 7, 1, {5}},
-        {"Electrics", 2,8, 9, 1, {6}},
-        {"Inspect_Build", 4,9, 10, 1, {4}},
-        {"Snagging", 5,3, 10, 2, {7, 8}},
+        {1,"Find_Bank",1, 1,2, 0, {}},
+        {2,"Get_Mortgage_approval",2, 2, 2, 1, {0}},
+        {3,"Draw_down",3,4,6,2,{0,1}},
+        {4,"Build_Foundation",3,3,4, 1,{2}},
+        {5,"Build_walls", 4, 5, 0,0, {}},
+        {6,"Roof_and_Ceiling", 1,5, 6, 2, {3, 4}},
+        {7,"Plumbing", 5,7, 7, 1, {5}},
+        {8,"Electrics", 2,8, 9, 1, {6}},
+        {9,"Inspect_Build", 4,9, 10, 1, {4}},
+        {10,"Snagging", 5,3, 10, 2, {7, 8}},
         };
 
     for (int task_index = 0; task_index < MAXTASKS; task_index++) {
@@ -51,13 +51,34 @@ void print_testExample(void) {
         }
 
         printf(" | ");
-        if (currentTask.numOfDependancies > 0) {
-            for (int j = 0; j < currentTask.numOfDependancies; j++) {
+        if (currentTask.numOfDependencies > 0) {
+            for (int j = 0; j < currentTask.numOfDependencies; j++) {
                 printf("%d ", currentTask.dependantTasks[j] + 1); // + 1, to ensure indexing is correct for user.
             }
         }
 
         printf("\n");
         print_spacedLine();
+    }
+}
+
+int getTaskNum(void) {
+    char userInput[MAXSIZE];
+    int value;
+
+    while (1) {
+        printf("How many Tasks would you like to add? (1-10)\n");
+
+        if (fgets(userInput,sizeof(userInput),stdin) == NULL) {
+            return -1;
+        }
+
+        value = atoi(userInput);
+
+        if (value > 0 && value <= MAXTASKS) {
+            return value;
+        }
+
+        printf("Invalid Input!\n");
     }
 }

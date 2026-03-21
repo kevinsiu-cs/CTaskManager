@@ -10,19 +10,22 @@
 
 
 typedef struct {
+    int taskID;
     char task[MAXSIZE];
     int ownerID;
     int startMonth;
     int endMonth;
-    int numOfDependancies;
+    int numOfDependencies;
     int dependantTasks[MAXTASKS];
 }Tasks;
 
 /*
- * Creation of the example Gantt Chart:
+ * Creation of the example Gantt Chart + General Formatting:
 */
 void print_topBorder(void);
 void print_Header(void);
 void print_spacedLine(void);
 void print_testExample(void);
+
+int getTaskNum(void);
 

@@ -10,18 +10,18 @@
 int main(void) {
     printf("Welcome to the CTaskManager\n");
 
-    char UserInput[MAXARRAY];
+    char userInput[MAXARRAY];
 
     while (1) {
         printf("Would you like to see an example of a Gantt Chart? (Yes or No)\n");
 
-        if (fgets(UserInput,sizeof(UserInput),stdin) == NULL) {
-            return 1;
+        if (fgets(userInput,sizeof(userInput),stdin) == NULL) {
+            return -1;
         }
-        removeNewline(UserInput);
+        removeNewline(userInput);
 
-        if (strcasecmp("Yes", UserInput) == 0 || strcasecmp("No", UserInput) == 0) {
-            if (strcasecmp("Yes", UserInput) == 0) {
+        if (strcasecmp("Yes", userInput) == 0 || strcasecmp("No", userInput) == 0) {
+            if (strcasecmp("Yes", userInput) == 0) {
                 print_testExample();
             }
             break;
@@ -29,6 +29,9 @@ int main(void) {
 
         printf("Invalid Input!\n");
         }
+
+    int taskNum = getTaskNum();
+    //printf("%d\n", taskNum);
 
     return 0;
 }
