@@ -31,7 +31,10 @@ int main(void) {
         }
 
     int taskNum = getTaskNum();
+    Tasks UserTasks[taskNum];
     //printf("%d\n", taskNum);
+
+    //getTaskInfo(UserTasks,taskNum);
 
     return 0;
 }

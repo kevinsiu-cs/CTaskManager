@@ -11,7 +11,7 @@
 
 typedef struct {
     int taskID;
-    char task[MAXSIZE];
+    char taskName[MAXSIZE];
     int ownerID;
     int startMonth;
     int endMonth;
@@ -28,4 +28,5 @@ void print_spacedLine(void);
 void print_testExample(void);
 
 int getTaskNum(void);
+void getTaskInfo(Tasks userTasks[], int taskNum);
 

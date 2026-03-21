@@ -1,4 +1,5 @@
 #include "gantt.h"
+#include "input.h"
 
 void print_topBorder(void) {
     for (int i = 0; i < 150; i++) {
@@ -39,7 +40,7 @@ void print_testExample(void) {
     for (int task_index = 0; task_index < MAXTASKS; task_index++) {
 
         Tasks currentTask = exampleTask[task_index];
-        printf("%-24s", exampleTask[task_index].task);
+        printf("%-24s", exampleTask[task_index].taskName);
 
         for (int i = 1; i <= 12; i++) {
             printf("|");
@@ -80,5 +81,30 @@ int getTaskNum(void) {
         }
 
         printf("Invalid Input!\n");
+    }
+}
+
+void getTaskInfo(Tasks userTasks[], int taskNum) {
+
+    int taskIDCounter = 1;
+    //Hardcoding OwnerID for now -> Will Implement once person functionality is added.
+    for (int i = 0; i < taskNum; i++) {
+
+        while (1) {
+            printf("Enter the task name: \n");
+            fgets(userTasks[i].taskName,MAXSIZE,stdin);
+            removeNewline((userTasks[i].taskName));
+
+            char *currentTaskName = userTasks[i].taskName;
+
+            if (strlen(currentTaskName) == 0) {
+                continue;
+            }
+
+            if (!isAlphaNumericSpaces(currentTaskName)) {
+                printf("Invalid task name, Please only use Alphabetical characters and numbers\n");
+                continue;
+            }
+        }
     }
 }
