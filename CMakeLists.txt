@@ -6,6 +6,8 @@ set(CMAKE_C_STANDARD 99)
 add_executable(ctaskmanager
         main.c
         src/gantt.c
+        include/input.h
+        src/input.c
 )
 
 target_include_directories(ctaskmanager PRIVATE include)

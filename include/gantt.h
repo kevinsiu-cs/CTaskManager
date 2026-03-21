@@ -11,6 +11,7 @@
 
 typedef struct {
     char task[MAXSIZE];
+    int ownerID;
     int startMonth;
     int endMonth;
     int numOfDependancies;
