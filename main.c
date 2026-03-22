@@ -36,8 +36,5 @@ int main(void) {
 
     getTaskInfo(userTaskArray,taskNum);
 
-    printTask(userTaskArray);
-
-
     return 0;
 }

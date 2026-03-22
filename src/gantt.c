@@ -85,176 +85,214 @@ int getNumOfTasks(void) {
     }
 }
 
-void getTaskInfo(Tasks userTasks[], int taskNum) {
+int getTaskName(Tasks userTasks[], int i) {
+    while (1) {
+        printf("Enter the task name: \n");
 
+        if (fgets(userTasks[i].taskName, MAXARRAY, stdin) == NULL) {
+            printf("fgets Error\n");
+            return 0;
+        }
+
+        char *currentTaskName = userTasks[i].taskName;
+
+        removeNewline(currentTaskName);
+        trimSpaces(currentTaskName);
+
+        if (currentTaskName[0] == '\0') {
+            printf("Task name is empty\n");
+            continue;
+        }
+
+        if (!isAlphaNumericSpaces(currentTaskName)) {
+            printf("Invalid task name, Please only use Alphabetical characters and numbers\n");
+            continue;
+        }
+
+        return 1;
+    }
+}
+
+void assignTaskID(Tasks userTasks[], int i, int *taskIDCounter) {
+    int currentTaskID = userTasks[i].taskID;
+    userTasks[i].taskID = (*taskIDCounter)++;
+}
+
+void assignOwnerID(Tasks userTasks[], int i) {
+    while (1) {
+        /*
+        printf("Who do you want to assign this task to? \n");
+
+        if (fgets(userTasks[i].ownerID,MAXARRAY,stdin) == NULL) {
+            printf("fgets Error\n");
+            return;
+        }
+
+
+
+        /*
+         * This function will be implemented later when as we will need to check
+         * if the person exists before assigning them a specific task.
+         *
+         */
+
+        int holder = 1;
+        userTasks[i].ownerID = holder++;
+        break;
+    }
+}
+
+int getStartMonth(Tasks userTasks[], int i) {
+    while (1) {
+        char userInput[MAXARRAY]; //fgets expects a string, so we cant pass userTask.startMonth
+        int currentMonth;
+
+        printf("Start month (1 - 12): \n");
+
+        if (fgets(userInput, MAXARRAY, stdin) == NULL) {
+            printf("fgets Error\n");
+            return 0;
+        }
+
+        removeNewline(userInput);
+        if (sscanf(userInput, "%d", &currentMonth) != 1) {
+            printf("Invalid number, please enter a number between 1 - 12\n");
+            continue;
+        }
+
+        if (currentMonth < 1 || currentMonth > 12) {
+            printf("Invalid number, please enter a number between 1 - 12\n");
+            continue;
+        }
+
+        userTasks[i].startMonth = currentMonth;
+        return 1;
+    }
+}
+
+int getEndMonth(Tasks userTasks[], int i) {
+    while (1) {
+        char userInput[MAXARRAY];
+        int currentMonth;
+
+        printf("End month (1 - 12): \n");
+
+        if (fgets(userInput, MAXARRAY, stdin) == NULL) {
+            printf("fgets Error\n");
+            return 0;
+        }
+
+        removeNewline(userInput);
+
+        if (sscanf(userInput, "%d", &currentMonth) != 1) {
+            printf("Invalid input, please enter a number between %d - 12\n", userTasks[i].startMonth);
+            continue;
+        }
+
+        if (currentMonth < userTasks[i].startMonth || currentMonth > 12) {
+            printf("Invalid input, please enter a number between %d - 12\n", userTasks[i].startMonth);
+            continue;
+        }
+        userTasks[i].endMonth = currentMonth;
+        return 1;
+    }
+}
+
+int getNumOfDependencies(Tasks userTasks[], int i) {
+    if (i == 0) {
+        printf("The first task cannot have dependencies, we will set it to 0\n");
+        userTasks[i].numOfDependencies = 0;
+        return 1;
+    } else {
+        while (1) {
+            char userInput[MAXARRAY];
+            int currentNumOfDependencies;
+
+            printf("Enter the number of dependent tasks (0 if none):\n");
+
+            if (fgets(userInput, MAXARRAY, stdin) == NULL) {
+                printf("fgets Error\n");
+                return 0;
+            }
+
+            removeNewline(userInput);
+
+            if (sscanf(userInput, "%d", &currentNumOfDependencies) != 1) {
+                printf("Invalid input. Enter a number between 0 and %d.\n", i);
+                continue;
+            }
+
+            if (currentNumOfDependencies < 0 || currentNumOfDependencies > i) {
+                printf("Invalid input. Enter a number between 0 and %d.\n", i);
+                continue;
+            }
+
+            userTasks[i].numOfDependencies = currentNumOfDependencies;
+            return 1;
+        }
+    }
+}
+
+int getDependencyIndexes(Tasks userTasks[], int i) {
+    for (int dependentLoop = 0; dependentLoop < userTasks[i].numOfDependencies; dependentLoop++) {
+        while (1) {
+            char userInput[MAXARRAY];
+            int currentDependency;
+
+            printf("Enter dependent task index (0 - %d):\n", i - 1);
+
+            if (fgets(userInput, MAXARRAY, stdin) == NULL) {
+                printf("fgets Error\n");
+                return 0;
+            }
+
+            removeNewline(userInput);
+
+            if (sscanf(userInput, "%d", &currentDependency) != 1) {
+                printf("Invalid input. please enter a valid task index between 0 and %d.\n", i - 1);
+                continue;
+            }
+
+            if (currentDependency < 0 || currentDependency >= i) {
+                printf("Invalid input. [lease enter a valid task index between 0 and %d.\n", i - 1);
+                continue;
+            }
+
+            userTasks[i].dependantTasks[dependentLoop] = currentDependency;
+            break;
+        }
+    }
+
+    return 1;
+}
+
+void getTaskInfo(Tasks userTasks[], int taskNum) {
     int taskIDCounter = 1;
     //Hardcoding OwnerID for now -> Will Implement once person functionality is added.
     for (int i = 0; i < taskNum; i++) {
-
-        while (1) {
-            printf("Enter the task name: \n");
-
-           if (fgets(userTasks[i].taskName,MAXARRAY,stdin) == NULL) {
-               printf("fgets Error\n");
-               return;
-           }
-
-            char *currentTaskName = userTasks[i].taskName;
-
-            removeNewline(currentTaskName);
-            trimSpaces(currentTaskName);
-
-            if (currentTaskName[0] == '\0') {
-                printf("Task name is empty\n");
-                continue;
-            }
-
-            if (!isAlphaNumericSpaces(trimSpaces(currentTaskName))){
-                printf("Invalid task name, Please only use Alphabetical characters and numbers\n");
-                continue;
-            }
-
-            int currentTaskID = userTasks[i].taskID;
-            userTasks[i].taskID = taskIDCounter++;
-            break;
+        if (!getTaskName(userTasks, i)) {
+            return;
         }
 
-        while (1) {
-            /*
-            printf("Who do you want to assign this task to? \n");
+        assignTaskID(userTasks, i, &taskIDCounter);
 
-            if (fgets(userTasks[i].ownerID,MAXARRAY,stdin) == NULL) {
-                printf("fgets Error\n");
-                return;
-            }
+        assignOwnerID(userTasks, i);
 
-
-
-            /*
-             * This function will be implemented later when as we will need to check
-             * if the person exists before assigning them a specific task.
-             *
-             */
-
-            int holder = 1;
-            userTasks[i].ownerID = holder++;
-            break;
+        if (!getStartMonth(userTasks, i)) {
+            return;
         }
 
-
-        while (1) {
-            char userInput[MAXARRAY]; //fgets expects a string, so we cant pass userTask.startMonth
-            int currentMonth;
-
-            printf("Start month (1 - 12): \n");
-
-            if (fgets(userInput,MAXARRAY,stdin) == NULL) {
-                printf("fgets Error\n");
-                return;
-            }
-
-            removeNewline(userInput);
-            if (sscanf(userInput, "%d",&currentMonth) != 1) {
-                printf("Invalid number, please enter a number between 1 - 12\n");
-                continue;
-            }
-
-            if (currentMonth < 1 || currentMonth > 12) {
-                printf("Invalid number, please enter a number between 1 - 12\n");
-                continue;
-            }
-
-            userTasks[i].startMonth = currentMonth;
-            break;
+        if (!getEndMonth(userTasks, i)) {
+            return;
         }
 
-        while (1) {
-            char userInput[MAXARRAY];
-            int currentMonth;
-
-            printf("End month (1 - 12): \n");
-
-            if (fgets(userInput,MAXARRAY,stdin) == NULL) {
-                printf("fgets Error\n");
-                return;
-            }
-
-            removeNewline(userInput);
-
-            if (sscanf(userInput, "%d",&currentMonth) != 1) {
-                printf("Invalid input, please enter a number between %d - 12\n", userTasks[i].startMonth);
-                continue;
-            }
-
-            if (currentMonth < userTasks[i].startMonth || currentMonth > 12) {
-                printf("Invalid input, please enter a number between %d - 12\n", userTasks[i].startMonth);
-                continue;
-            }
-            userTasks[i].endMonth = currentMonth;
-            break;
+        if (!getNumOfDependencies(userTasks, i)) {
+            return;
         }
 
-                if (i == 0) {
-            printf("The first task cannot have dependencies, we will set it to 0\n");
-            userTasks[i].numOfDependencies = 0;
-        } else {
-            while (1) {
-                char userInput[MAXARRAY];
-                int currentNumOfDependencies;
-
-                printf("Enter the number of dependent tasks (0 if none):\n");
-
-                if (fgets(userInput, MAXARRAY, stdin) == NULL) {
-                    printf("fgets Error\n");
-                    return;
-                }
-
-                removeNewline(userInput);
-
-                if (sscanf(userInput, "%d", &currentNumOfDependencies) != 1) {
-                    printf("Invalid input. Enter a number between 0 and %d.\n", i);
-                    continue;
-                }
-
-                if (currentNumOfDependencies < 0 || currentNumOfDependencies > i) {
-                    printf("Invalid input. Enter a number between 0 and %d.\n", i);
-                    continue;
-                }
-
-                userTasks[i].numOfDependencies = currentNumOfDependencies;
-                break;
-            }
+        if (!getDependencyIndexes(userTasks, i)) {
+            return;
         }
-
-        for (int dependentLoop = 0; dependentLoop < userTasks[i].numOfDependencies; dependentLoop++) {
-            while (1) {
-                char userInput[MAXARRAY];
-                int currentDependency;
-
-                printf("Enter dependent task index (0 - %d):\n", i - 1);
-
-                if (fgets(userInput, MAXARRAY, stdin) == NULL) {
-                    printf("fgets Error\n");
-                    return;
-                }
-
-                removeNewline(userInput);
-
-                if (sscanf(userInput, "%d", &currentDependency) != 1) {
-                    printf("Invalid input. Please enter a valid task index between 0 and %d.\n", i - 1);
-                    continue;
-                }
-
-                if (currentDependency < 0 || currentDependency >= i) {
-                    printf("Invalid input. Please enter a valid task index between 0 and %d.\n", i - 1);
-                    continue;
-                }
-
-                userTasks[i].dependantTasks[dependentLoop] = currentDependency;
-                break;
-            }
-        }
-
     }
 }
 

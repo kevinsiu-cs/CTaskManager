@@ -28,6 +28,14 @@ void print_spacedLine(void);
 void print_testExample(void);
 
 int getNumOfTasks(void);
+
+int getTaskName(Tasks userTasks[], int i);
+void assignTaskID(Tasks userTasks[], int i, int *taskIDCounter);
+void assignOwnerID(Tasks userTasks[], int i);
+int getStartMonth(Tasks userTasks[], int i);
+int getEndMonth(Tasks userTasks[], int i);
+int getNumOfDependencies(Tasks userTasks[], int i);
+int getDependencyIndexes(Tasks userTasks[], int i);
 void getTaskInfo(Tasks userTasks[], int taskNum);
 
 void printTask(const Tasks *task);
