@@ -19,6 +19,7 @@ int main(void) {
             return -1;
         }
         removeNewline(userInput);
+        trimSpaces(userInput);
 
         if (strcasecmp("Yes", userInput) == 0 || strcasecmp("No", userInput) == 0) {
             if (strcasecmp("Yes", userInput) == 0) {
@@ -35,6 +36,7 @@ int main(void) {
     //printf("%d\n", taskNum);
 
     getTaskInfo(userTaskArray,taskNum);
+    printTask(userTaskArray,taskNum);
 
     return 0;
 }

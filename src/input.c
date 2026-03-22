@@ -44,7 +44,7 @@ bool isAlphaNumericSpaces(char *taskName) {
     bool hasLetter = false;
 
     while (taskName[index] != '\0') {
-        if (isalpha((unsigned char)taskName[index])) {
+        if (isalnum((unsigned char)taskName[index])) {
             hasLetter = true;
         } else if (taskName[index] != ' ') {
             return false;

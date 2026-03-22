@@ -38,5 +38,5 @@ int getNumOfDependencies(Tasks userTasks[], int i);
 int getDependencyIndexes(Tasks userTasks[], int i);
 void getTaskInfo(Tasks userTasks[], int taskNum);
 
-void printTask(const Tasks *task);
+void printTask(const Tasks userTasks[], int taskNum);
 

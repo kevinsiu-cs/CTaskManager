@@ -175,7 +175,7 @@ int getEndMonth(Tasks userTasks[], int i) {
         char userInput[MAXARRAY];
         int currentMonth;
 
-        printf("End month (1 - 12): \n");
+        printf("End month (%d - 12): \n",userTasks->startMonth);
 
         if (fgets(userInput, MAXARRAY, stdin) == NULL) {
             printf("fgets Error\n");
@@ -239,7 +239,8 @@ int getDependencyIndexes(Tasks userTasks[], int i) {
             char userInput[MAXARRAY];
             int currentDependency;
 
-            printf("Enter dependent task index (0 - %d):\n", i - 1);
+
+            printf("Enter dependent task index (1 - %d):\n", i);
 
             if (fgets(userInput, MAXARRAY, stdin) == NULL) {
                 printf("fgets Error\n");
@@ -249,16 +250,17 @@ int getDependencyIndexes(Tasks userTasks[], int i) {
             removeNewline(userInput);
 
             if (sscanf(userInput, "%d", &currentDependency) != 1) {
-                printf("Invalid input. please enter a valid task index between 0 and %d.\n", i - 1);
+                printf("Invalid input. Please enter a valid task index between 1 and %d.\n", i);
                 continue;
             }
 
-            if (currentDependency < 0 || currentDependency >= i) {
-                printf("Invalid input. [lease enter a valid task index between 0 and %d.\n", i - 1);
+            if (currentDependency < 1 || currentDependency > i) {
+                printf("Invalid input. Please enter a valid task index between 1 and %d.\n", i);
                 continue;
             }
 
-            userTasks[i].dependantTasks[dependentLoop] = currentDependency;
+
+            userTasks[i].dependantTasks[dependentLoop] = currentDependency - 1; //return the correct 0-indexed value;
             break;
         }
     }
@@ -296,28 +298,35 @@ void getTaskInfo(Tasks userTasks[], int taskNum) {
     }
 }
 
-void printTask(const Tasks *task) {
-    int i;
+void printTask(const Tasks userTasks[], int taskNum) {
+    if (taskNum <= 0) {
+        printf("No tasks to display.\n");
+        return;
+    }
 
-    printf("Task Details:\n");
-    printf("taskID: %d\n", task->taskID);
-    printf("taskName: %s\n", task->taskName);
-    printf("ownerID: %d\n", task->ownerID);
-    printf("startMonth: %d\n", task->startMonth);
-    printf("endMonth: %d\n", task->endMonth);
-    printf("numOfDependencies: %d\n", task->numOfDependencies);
+    for (int t = 0; t < taskNum; t++) {
+        const Tasks *task = &userTasks[t];
 
+        printf("\n--- Task Details (Task: %d) ---\n", t + 1); // 1-based display
+        printf("taskID:            %d\n", task->taskID);
+        printf("taskName:          %s\n", task->taskName);
+        printf("ownerID:           %d\n", task->ownerID);
+        printf("startMonth:        %d\n", task->startMonth);
+        printf("endMonth:          %d\n", task->endMonth);
+        printf("numOfDependencies: %d\n", task->numOfDependencies);
 
-    printf("dependantTasks: ");
-    if (task->numOfDependencies <= 0) {
-        printf("None");
-    } else {
-        for (i = 0; i < task->numOfDependencies; i++) {
-            printf("%d", task->dependantTasks[i]);
-            if (i < task->numOfDependencies - 1) {
-                printf(", ");
+        printf("dependantTasks:    ");
+        if (task->numOfDependencies <= 0) {
+            printf("None");
+        } else {
+            for (int i = 0; i < task->numOfDependencies; i++) {
+                // Add +1 here so the output matches the 1-based input
+                printf("%d", task->dependantTasks[i] + 1);
+                if (i < task->numOfDependencies - 1) {
+                    printf(", ");
+                }
             }
         }
+        printf("\n");
     }
-    printf("\n");
 }
