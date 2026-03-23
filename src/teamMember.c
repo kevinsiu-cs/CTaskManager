@@ -91,5 +91,51 @@ void displayAllMembersAndTasks(struct teamMember *headMember) {
 }
 
 void removeMember(struct teamMember **teamHeadAddress) {
-    printf("removeMember is not implemented yet.\n");
+    if (*teamHeadAddress == NULL) {
+        printf("The team is currently empty. Nothing to remove.\n");
+        return;
+    }
+
+    displayAllMembersAndTasks(*teamHeadAddress);
+
+    char input[MAXARRAY];
+    int idToRemove;
+
+    printf("\nEnter the ID of the member you wish to remove: ");
+    if (fgets(input, MAXARRAY, stdin) == NULL) return;
+
+    if (sscanf(input, "%d", &idToRemove) != 1) {
+        printf("Invalid ID.\n");
+        return;
+    }
+
+    struct teamMember *curr = *teamHeadAddress;
+    struct teamMember *prev = NULL;
+
+    while (curr != NULL && curr->memberID != idToRemove) {
+        prev = curr;
+        curr = curr->nextMember;
+    }
+
+    if (curr == NULL) {
+        printf("Member with ID %d not found.\n", idToRemove);
+        return;
+    }
+
+
+    struct Tasks *taskPtr = curr->firstTask;
+    while (taskPtr != NULL) {
+        struct Tasks *tempTask = taskPtr;
+        taskPtr = taskPtr->nextTask;
+        free(tempTask);
+    }
+
+    if (prev == NULL) {
+        *teamHeadAddress = curr->nextMember;
+    } else {
+        prev->nextMember = curr->nextMember;
+    }
+
+    printf("Member '%s' (ID: %d) and their tasks have been removed.\n", curr->memberName, curr->memberID);
+    free(curr);
 }

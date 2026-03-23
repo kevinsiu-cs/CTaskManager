@@ -20,6 +20,7 @@ typedef struct Tasks{
     int endMonth;
     int numOfDependencies;
     int dependantTasks[MAXTASKS];
+    struct Tasks *nextTask;
 }Tasks;
 
 /*
