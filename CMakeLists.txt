@@ -8,6 +8,8 @@ add_executable(ctaskmanager
         src/gantt.c
         include/input.h
         src/input.c
+        include/teamMember.h
+        src/teamMember.c
 )
 
 target_include_directories(ctaskmanager PRIVATE include)

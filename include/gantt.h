@@ -1,3 +1,6 @@
+#ifndef GANTT_H
+#define GANTT_H
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -9,7 +12,7 @@
 
 
 
-typedef struct {
+typedef struct Tasks{
     int taskID;
     char taskName[MAXARRAY];
     int ownerID;
@@ -38,5 +41,9 @@ int getNumOfDependencies(Tasks userTasks[], int i);
 int getDependencyIndexes(Tasks userTasks[], int i);
 void getTaskInfo(Tasks userTasks[], int taskNum);
 
-void printTask(const Tasks userTasks[], int taskNum);
 
+void addTask(struct teamMember *teamHead);
+void printTask(const Tasks userTasks[], int taskNum);
+void printUserGantt()
+
+#endif
