@@ -330,3 +330,12 @@ void printTask(const Tasks userTasks[], int taskNum) {
         printf("\n");
     }
 }
+
+
+void addTask(struct teamMember *teamHead) {
+    printf("addTask is not implemented yet.\n");
+}
+
+void printUserGantt(void) {
+    printf("printUserGantt is not implemented yet.\n");
+}

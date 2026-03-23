@@ -62,7 +62,8 @@ int main(void) {
                 case 2: removeMember(&memberHead); break;
                 case 3: addTask(memberHead); break;
                 case 4: printUserGantt(); break;
-                default: break:
+                case 5: displayAllMembersAndTasks(memberHead); break;
+                default: break;
             }
         }
     }while (menuChoice != 6);
@@ -80,7 +81,7 @@ int main(void) {
 }
 
 void printMenu(void) {
-    printf("=== Menu ===\n");
+    printf("\n=== Menu ===\n");
     printf("1. Add a Team Member\n");
     printf("2. Remove a Team Member\n");
     printf("3. Add and Set a Task\n");

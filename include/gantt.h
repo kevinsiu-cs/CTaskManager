@@ -10,7 +10,7 @@
 #define MAXARRAY 256
 #define MAXTASKS 10
 
-
+struct teamMember;
 
 typedef struct Tasks{
     int taskID;
@@ -44,6 +44,6 @@ void getTaskInfo(Tasks userTasks[], int taskNum);
 
 void addTask(struct teamMember *teamHead);
 void printTask(const Tasks userTasks[], int taskNum);
-void printUserGantt()
+void printUserGantt();
 
 #endif

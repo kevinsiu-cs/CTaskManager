@@ -4,6 +4,9 @@
 #define MAXARRAY 256
 #define MAXUSERS 10
 
+struct Tasks;
+struct teamMember;
+
 typedef struct teamMember{
     int memberID;
     char memberName[MAXARRAY];
