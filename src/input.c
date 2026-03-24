@@ -53,3 +53,7 @@ bool isAlphaNumericSpaces(char *taskName) {
     }
     return hasLetter;
 }
+
+void clearScreen() {
+
+}

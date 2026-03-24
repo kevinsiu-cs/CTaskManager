@@ -67,16 +67,6 @@ int main(void) {
             }
         }
     }while (menuChoice != 6);
-
-    /*
-    int taskNum = getNumOfTasks();
-    Tasks userTaskArray[taskNum];
-    //printf("%d\n", taskNum);
-
-    getTaskInfo(userTaskArray,taskNum);
-    printTask(userTaskArray,taskNum);
-    */
-
     return 0;
 }
 

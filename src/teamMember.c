@@ -4,10 +4,11 @@
 
 #include "teamMember.h"
 #include "input.h"
-#include "gantt.h"  //needed to fix compilation issue with currTask -> TaskName
+#include "gantt.h"
 
 
 void addMember(struct teamMember **teamHeadAddress) {
+    clearScreen();
     static int currentID = 1;
     char userInput[MAXARRAY];
 
@@ -60,6 +61,7 @@ void addMember(struct teamMember **teamHeadAddress) {
 }
 
 void displayAllMembersAndTasks(struct teamMember *headMember) {
+    clearScreen();
     struct teamMember *currentMember = headMember;
 
     printf("\n=== Team Members ===\n");
@@ -70,27 +72,32 @@ void displayAllMembersAndTasks(struct teamMember *headMember) {
     }
 
     while (currentMember != NULL) {
+        printf("\n===================\n");
+
         printf("Name: %s, ID: %d\n", currentMember->memberName, currentMember->memberID);
         printf("Tasks:\n");
 
         if (currentMember->firstTask == NULL) {
             printf("This Team Member doesn't have any tasks\n");
-            return;
+
         }else {
             struct Tasks *currentTask = currentMember->firstTask;
 
             while (currentTask != NULL) {
                 printf("Task: %s\n",currentTask->taskName);
+                currentTask = currentTask->nextTask;
             }
         }
 
-        printf("===================");
+
+        printf("\n===================\n");
 
         currentMember = currentMember->nextMember;
     }
 }
 
 void removeMember(struct teamMember **teamHeadAddress) {
+    clearScreen();
     if (*teamHeadAddress == NULL) {
         printf("The team is currently empty. Nothing to remove.\n");
         return;

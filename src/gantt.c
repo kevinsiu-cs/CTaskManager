@@ -1,4 +1,5 @@
 #include "gantt.h"
+#include "teamMember.h"
 #include "input.h"
 
 void print_topBorder(void) {
@@ -20,6 +21,7 @@ void print_spacedLine(void) {
 }
 
 void print_testExample(void) {
+    clearScreen();
     print_topBorder();
     print_Header();
     print_spacedLine();
@@ -63,38 +65,17 @@ void print_testExample(void) {
     }
 }
 
-int getNumOfTasks(void) {
-    char userInput[MAXARRAY];
-    int value;
-
-    while (1) {
-        printf("How many Tasks would you like to add? (1-10)\n");
-
-        if (fgets(userInput,MAXARRAY,stdin) == NULL) {
-            printf("fgets Error\n");
-            return -1;
-        }
-
-        if (sscanf(userInput,"%d",&value) == 1) {
-            if (value > 0 && value <= MAXTASKS) {
-                return value;
-            }
-        }
-
-        printf("Invalid Input!\n");
-    }
-}
-
-int getTaskName(Tasks userTasks[], int i) {
+int getTaskName(Tasks *task) {
+    clearScreen();
     while (1) {
         printf("Enter the task name: \n");
 
-        if (fgets(userTasks[i].taskName, MAXARRAY, stdin) == NULL) {
+        if (fgets(task->taskName, MAXARRAY, stdin) == NULL) {
             printf("fgets Error\n");
             return 0;
         }
 
-        char *currentTaskName = userTasks[i].taskName;
+        char *currentTaskName = task->taskName;
 
         removeNewline(currentTaskName);
         trimSpaces(currentTaskName);
@@ -113,36 +94,9 @@ int getTaskName(Tasks userTasks[], int i) {
     }
 }
 
-void assignTaskID(Tasks userTasks[], int i, int *taskIDCounter) {
-    int currentTaskID = userTasks[i].taskID;
-    userTasks[i].taskID = (*taskIDCounter)++;
-}
 
-void assignOwnerID(Tasks userTasks[], int i) {
-    while (1) {
-        /*
-        printf("Who do you want to assign this task to? \n");
-
-        if (fgets(userTasks[i].ownerID,MAXARRAY,stdin) == NULL) {
-            printf("fgets Error\n");
-            return;
-        }
-
-
-
-        /*
-         * This function will be implemented later when as we will need to check
-         * if the person exists before assigning them a specific task.
-         *
-         */
-
-        int holder = 1;
-        userTasks[i].ownerID = holder++;
-        break;
-    }
-}
-
-int getStartMonth(Tasks userTasks[], int i) {
+int getStartMonth(Tasks *task){
+    clearScreen();
     while (1) {
         char userInput[MAXARRAY]; //fgets expects a string, so we cant pass userTask.startMonth
         int currentMonth;
@@ -165,17 +119,18 @@ int getStartMonth(Tasks userTasks[], int i) {
             continue;
         }
 
-        userTasks[i].startMonth = currentMonth;
+        task->startMonth = currentMonth;
         return 1;
     }
 }
 
-int getEndMonth(Tasks userTasks[], int i) {
+int getEndMonth(Tasks *task){
+    clearScreen();
     while (1) {
         char userInput[MAXARRAY];
         int currentMonth;
 
-        printf("End month (%d - 12): \n",userTasks->startMonth);
+        printf("End month (%d - 12): \n",task->startMonth);
 
         if (fgets(userInput, MAXARRAY, stdin) == NULL) {
             printf("fgets Error\n");
@@ -185,30 +140,75 @@ int getEndMonth(Tasks userTasks[], int i) {
         removeNewline(userInput);
 
         if (sscanf(userInput, "%d", &currentMonth) != 1) {
-            printf("Invalid input, please enter a number between %d - 12\n", userTasks[i].startMonth);
+            printf("Invalid input, please enter a number between %d - 12\n", task->startMonth);
             continue;
         }
 
-        if (currentMonth < userTasks[i].startMonth || currentMonth > 12) {
-            printf("Invalid input, please enter a number between %d - 12\n", userTasks[i].startMonth);
+        if (currentMonth < task->startMonth || currentMonth > 12) {
+            printf("Invalid input, please enter a number between %d - 12\n",task->startMonth);
             continue;
         }
-        userTasks[i].endMonth = currentMonth;
+        task->endMonth = currentMonth;
         return 1;
     }
 }
 
-int getNumOfDependencies(Tasks userTasks[], int i) {
-    if (i == 0) {
-        printf("The first task cannot have dependencies, we will set it to 0\n");
-        userTasks[i].numOfDependencies = 0;
+int getNumOfDependencies(Tasks *task, int totalExistingTasks) {
+    clearScreen();
+    if (totalExistingTasks == 0) {
+        printf("This is the first task in the project; it cannot have dependencies.\n");
+        task->numOfDependencies = 0;
         return 1;
-    } else {
+    }
+
+    while (1) {
+        char userInput[MAXARRAY];
+        int count;
+
+        int limit;
+
+        if (totalExistingTasks < MAXTASKS) {
+            limit = totalExistingTasks;
+        } else {
+            limit = MAXTASKS;
+        }
+
+        printf("Enter the number of dependent tasks (0 - %d):\n", limit);
+
+        if (fgets(userInput, MAXARRAY, stdin) == NULL) {
+            printf("fgets Error\n");
+            return 0;
+        }
+
+        removeNewline(userInput);
+
+        if (sscanf(userInput, "%d", &count) != 1) {
+            printf("Invalid input. Please enter a number.\n");
+            continue;
+        }
+
+        if (count < 0 || count > limit) {
+            printf("Invalid input. Enter a number between 0 and %d.\n", limit);
+            continue;
+        }
+
+        task->numOfDependencies = count;
+        return 1;
+    }
+}
+
+int getDependencyIndexes(Tasks *task, int totalExistingTasks) {
+    clearScreen();
+    if (task->numOfDependencies == 0) {
+        return 1;
+    }
+
+    for (int i = 0; i < task->numOfDependencies; i++) {
         while (1) {
             char userInput[MAXARRAY];
-            int currentNumOfDependencies;
+            int depID;
 
-            printf("Enter the number of dependent tasks (0 if none):\n");
+            printf("Enter dependent task ID (1 - %d): ", totalExistingTasks);
 
             if (fgets(userInput, MAXARRAY, stdin) == NULL) {
                 printf("fgets Error\n");
@@ -217,125 +217,121 @@ int getNumOfDependencies(Tasks userTasks[], int i) {
 
             removeNewline(userInput);
 
-            if (sscanf(userInput, "%d", &currentNumOfDependencies) != 1) {
-                printf("Invalid input. Enter a number between 0 and %d.\n", i);
+            if (sscanf(userInput, "%d", &depID) != 1) {
+                printf("Invalid input. Please enter a valid Task ID.\n");
                 continue;
             }
 
-            if (currentNumOfDependencies < 0 || currentNumOfDependencies > i) {
-                printf("Invalid input. Enter a number between 0 and %d.\n", i);
+            if (depID < 1 || depID > totalExistingTasks) {
+                printf("Invalid ID. You can only depend on existing tasks (1 - %d).\n", totalExistingTasks);
                 continue;
             }
 
-            userTasks[i].numOfDependencies = currentNumOfDependencies;
-            return 1;
-        }
-    }
-}
-
-int getDependencyIndexes(Tasks userTasks[], int i) {
-    for (int dependentLoop = 0; dependentLoop < userTasks[i].numOfDependencies; dependentLoop++) {
-        while (1) {
-            char userInput[MAXARRAY];
-            int currentDependency;
-
-
-            printf("Enter dependent task index (1 - %d):\n", i);
-
-            if (fgets(userInput, MAXARRAY, stdin) == NULL) {
-                printf("fgets Error\n");
-                return 0;
-            }
-
-            removeNewline(userInput);
-
-            if (sscanf(userInput, "%d", &currentDependency) != 1) {
-                printf("Invalid input. Please enter a valid task index between 1 and %d.\n", i);
-                continue;
-            }
-
-            if (currentDependency < 1 || currentDependency > i) {
-                printf("Invalid input. Please enter a valid task index between 1 and %d.\n", i);
-                continue;
-            }
-
-
-            userTasks[i].dependantTasks[dependentLoop] = currentDependency - 1; //return the correct 0-indexed value;
+            //store based on 0 indexing.
+            task->dependantTasks[i] = depID - 1;
             break;
         }
     }
-
     return 1;
 }
 
-void getTaskInfo(Tasks userTasks[], int taskNum) {
-    int taskIDCounter = 1;
-    //Hardcoding OwnerID for now -> Will Implement once person functionality is added.
-    for (int i = 0; i < taskNum; i++) {
-        if (!getTaskName(userTasks, i)) {
-            return;
+//this function is needed for the limit
+int countTotalTasks(struct teamMember *teamHead) {
+    int count = 0;
+
+    struct teamMember *currMem = teamHead;
+
+    while (currMem != NULL) {
+        Tasks *currTask = currMem->firstTask;
+        while (currTask != NULL) {
+            count++;
+            currTask = currTask->nextTask;
         }
-
-        assignTaskID(userTasks, i, &taskIDCounter);
-
-        assignOwnerID(userTasks, i);
-
-        if (!getStartMonth(userTasks, i)) {
-            return;
-        }
-
-        if (!getEndMonth(userTasks, i)) {
-            return;
-        }
-
-        if (!getNumOfDependencies(userTasks, i)) {
-            return;
-        }
-
-        if (!getDependencyIndexes(userTasks, i)) {
-            return;
-        }
+        currMem = currMem->nextMember;
     }
-}
-
-void printTask(const Tasks userTasks[], int taskNum) {
-    if (taskNum <= 0) {
-        printf("No tasks to display.\n");
-        return;
-    }
-
-    for (int t = 0; t < taskNum; t++) {
-        const Tasks *task = &userTasks[t];
-
-        printf("\n--- Task Details (Task: %d) ---\n", t + 1); // 1-based display
-        printf("taskID:            %d\n", task->taskID);
-        printf("taskName:          %s\n", task->taskName);
-        printf("ownerID:           %d\n", task->ownerID);
-        printf("startMonth:        %d\n", task->startMonth);
-        printf("endMonth:          %d\n", task->endMonth);
-        printf("numOfDependencies: %d\n", task->numOfDependencies);
-
-        printf("dependantTasks:    ");
-        if (task->numOfDependencies <= 0) {
-            printf("None");
-        } else {
-            for (int i = 0; i < task->numOfDependencies; i++) {
-                // Add +1 here so the output matches the 1-based input
-                printf("%d", task->dependantTasks[i] + 1);
-                if (i < task->numOfDependencies - 1) {
-                    printf(", ");
-                }
-            }
-        }
-        printf("\n");
-    }
+    return count;
 }
 
 
 void addTask(struct teamMember *teamHead) {
-    printf("addTask is not implemented yet.\n");
+    clearScreen();
+    if (teamHead == NULL) {
+        printf("Error: You must add a team member first!\n");
+        return;
+    }
+
+    displayAllMembersAndTasks(teamHead);
+    static int globalTaskID = 1;
+
+    int ownerID;
+    char input[MAXARRAY];
+    printf("Enter the Member ID to assign this task to: ");
+    if (fgets(input, MAXARRAY, stdin) == NULL) {
+        printf("fgets Error\n");
+        return;
+    }
+
+    if (sscanf(input, "%d", &ownerID) != 1) {
+        printf("Invalid ID\n");
+        return;
+    }
+
+    struct teamMember *currMem = teamHead;
+    while (currMem != NULL && currMem->memberID != ownerID) {
+        currMem = currMem->nextMember;
+    }
+
+    if (currMem == NULL) {
+        printf("Member ID %d not found.\n", ownerID);
+        return;
+    }
+
+    Tasks *newTask = malloc(sizeof(Tasks));
+    if (!newTask) {
+        printf("Memory allocation failed.\n");
+        return;
+    }
+
+    newTask->taskID = globalTaskID++;
+    newTask->ownerID = ownerID;
+    newTask->nextTask = NULL; //first task
+
+
+    if (!getTaskName(newTask)){
+        free(newTask); return;
+    }
+    if (!getStartMonth(newTask)){
+        free(newTask); return;
+    }
+    if (!getEndMonth(newTask)) {
+        free(newTask); return;
+    }
+
+
+    int totalTasks = countTotalTasks(teamHead);
+
+    if (!getNumOfDependencies(newTask, totalTasks)){
+        free(newTask); return;
+    }
+    if (!getDependencyIndexes(newTask, totalTasks)) {
+        free(newTask); return;
+    }
+
+    //link task to the member
+    if (currMem->firstTask == NULL) {
+        currMem->firstTask = newTask;
+    } else {
+        Tasks *temp = currMem->firstTask;
+        while (temp->nextTask != NULL) {
+            temp = temp->nextTask;
+        }
+        temp->nextTask = newTask;
+    }
+    printf("Task ID %d ('%s') added to %s.\n", newTask->taskID, newTask->taskName, currMem->memberName);
 }
 
+
 void printUserGantt(void) {
+    clearScreen();
     printf("printUserGantt is not implemented yet.\n");
 }
