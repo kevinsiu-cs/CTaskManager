@@ -36,7 +36,7 @@ void print_testExample(void) {
         {7,"Plumbing", 5,7, 7, 1, {5}},
         {8,"Electrics", 2,8, 9, 1, {6}},
         {9,"Inspect_Build", 4,9, 10, 1, {4}},
-        {10,"Snagging", 5,3, 10, 2, {7, 8}},
+        {10,"Snagging", 5,8, 10, 2, {7, 8}},
         };
 
     for (int task_index = 0; task_index < MAXTASKS; task_index++) {
