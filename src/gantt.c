@@ -330,8 +330,61 @@ void addTask(struct teamMember *teamHead) {
     printf("Task ID %d ('%s') added to %s.\n", newTask->taskID, newTask->taskName, currMem->memberName);
 }
 
+int compareTaskIDs(const void *a, const void *b) {
+    Tasks *taskA = *(Tasks **)a;
+    Tasks *taskB = *(Tasks **)b;
+    return (taskA->taskID - taskB->taskID);
+}
 
-void printUserGantt(void) {
+void printUserGantt(struct teamMember *teamHead) {
     clearScreen();
-    printf("printUserGantt is not implemented yet.\n");
+    int totalTasks = countTotalTasks(teamHead);
+
+    if (totalTasks == 0) {
+        printf("The project is empty. Add members and tasks first.\n");
+        return;
+    }
+
+    Tasks **allTasks = malloc(totalTasks * sizeof(Tasks *));
+    if (allTasks == NULL) return;
+
+    int index = 0;
+    struct teamMember *currMem = teamHead;
+    while (currMem != NULL) {
+        Tasks *currTask = currMem->firstTask;
+        while (currTask != NULL) {
+            allTasks[index++] = currTask;
+            currTask = currTask->nextTask;
+        }
+        currMem = currMem->nextMember;
+    }
+
+    qsort(allTasks, totalTasks, sizeof(Tasks *), compareTaskIDs);
+
+    print_topBorder();
+    print_Header();
+    print_spacedLine();
+
+    for (int i = 0; i < totalTasks; i++) {
+        Tasks *t = allTasks[i];
+        printf("%-24s", t->taskName);
+
+        for (int month = 1; month <= 12; month++) {
+            printf("|");
+            if (month >= t->startMonth && month <= t->endMonth) {
+                printf("  XXX  ");
+            } else {
+                printf("       ");
+            }
+        }
+
+        printf(" | ");
+        for (int j = 0; j < t->numOfDependencies; j++) {
+            printf("%d ", t->dependantTasks[j] + 1);
+        }
+        printf("\n");
+        print_spacedLine();
+    }
+
+    free(allTasks);
 }

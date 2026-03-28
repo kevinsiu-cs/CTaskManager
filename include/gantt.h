@@ -43,6 +43,7 @@ int getDependencyIndexes(Tasks *task, int totalExistingTasks);
 
 void addTask(struct teamMember *teamHead);
 void printTask(const Tasks userTasks[], int taskNum);
-void printUserGantt();
+int compareTaskIDs(const void *a, const void *b);
+void printUserGantt(struct teamMember *teamHead);
 
 #endif

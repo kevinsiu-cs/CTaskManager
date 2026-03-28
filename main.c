@@ -61,7 +61,7 @@ int main(void) {
                 case 1: addMember(&memberHead); break;
                 case 2: removeMember(&memberHead); break;
                 case 3: addTask(memberHead); break;
-                case 4: printUserGantt(); break;
+                case 4: printUserGantt(memberHead); break;
                 case 5: displayAllMembersAndTasks(memberHead); break;
                 default: break;
             }
