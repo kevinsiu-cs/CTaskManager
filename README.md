@@ -36,30 +36,35 @@ After the initial answer, the user will then be prompted with a menu with the fo
 * CMake: Version 3.20 or higher
 * Git: To clone the repository
 
-**Step 1: Setup + Compilation**
+**Step 1: Setup**
 
-Open the terminal (Command Prompt / Powershell on Windows), (Bash on Linux/MacOS) and run:
-
-**Clone the Repository:**
+* Open the terminal (Command Prompt / Powershell on Windows), (Bash on Linux/MacOS) and run:
 
 * git clone https://github.com/kevinsiu-cs/CTaskManager.git 
 
-**Go to CTaskManager folder (may be type sensitive on Linux):**
-
 * cd CTaskManager
+  
 
-**Build and compile the project:**
+**Step 2: Build and compile the project:**
+
+**Linux:**
 * cmake -S . -B build
+
+**Windows:**
+* cmake -G "MinGW Makefiles" -S . -B build
+  
+**Then for both:**
 * cmake --build build 
 
-**Step 2: Run the Program**
-Depending on your operating system used and ensuring that you are in the correct folder:
+**Step 3: Run the Program**
+(Ensure that you are currently in the folder with main.c)
 
 **Linux** 
 * ./build/ctaskmanager
 
 **Windows**
-* .\build\Debug\ctaskmanager.exe
+* .\build\ctaskmanager.exe
+
 
 # Usage Notes:
 
